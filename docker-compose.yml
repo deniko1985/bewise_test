@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  bewise_test:
+    container_name: bewise_local
+    hostname: app
+    user: '1000:1000'
+    restart: unless-stopped
+    build: 
+      context: ./src/
+      network: host
+    networks:
+      - bewise-network_local
+    volumes:
+      - ./src/:/src/
+    ports:
+      - 5003:5003
+    depends_on:
+      - postgres_bewise_local
+
+  postgres_bewise_local:
+    container_name: postgres_bewise_local
+    image: postgres:15.2
+    hostname: postgres_bewise_local
+    restart: unless-stopped
+    networks:
+      - bewise-network_local
+    environment:
+      POSTGRES_DB: "bewise_test"
+      POSTGRES_USER: "postgres"
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ./postgres/data/:/var/lib/postgresql/data/
+    command:
+      - -p 5444
+    ports:
+      - 5444:5444
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bewise_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+
+
+networks:
+  bewise-network_local:
+    driver: bridge

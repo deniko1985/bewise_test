@@ -1,0 +1,5 @@
+postgres/
+src/audio_files/
+**/__pycache__/
+src/migration/versions/*.py
+.env
