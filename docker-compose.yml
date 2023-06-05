@@ -15,8 +15,6 @@ services:
       - ./src/:/src/
     ports:
       - 5003:5003
-    depends_on:
-      - postgres_bewise_local
 
   postgres_bewise_local:
     container_name: postgres_bewise_local
@@ -40,8 +38,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-
 
 networks:
   bewise-network_local:
